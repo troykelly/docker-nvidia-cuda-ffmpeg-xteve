@@ -1,4 +1,4 @@
-FROM ghcr.io/aperim/nvidia-cuda-ffmpeg:latest
+FROM ghcr.io/aperim/nvidia-cuda-ffmpeg:0.1.9
 
 RUN apt-get update && \
     apt-get -y --allow-change-held-packages full-upgrade && \
