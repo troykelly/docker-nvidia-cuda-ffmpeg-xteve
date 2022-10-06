@@ -56,7 +56,11 @@ jobs:
         # yamllint enable rule:line-length
 
   build:
-    name: 👷 Build
+    strategy:
+      matrix:
+        version: [11.8.0, 11.7.1, 11.7.0]
+        os: [ubuntu22.04]
+    name: 👷 Build CUDA ${{ matrix.version }} on ${{ matrix.os }}
     needs:
       - information
     runs-on: ubuntu-latest
@@ -77,17 +81,22 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
+          flavor: |
+            latest=false
+            prefix=
+            suffix=
           # list of Docker images to use as base name for tags
           images: |
             troykelly/xteve-nvidia-cuda-ffmpeg
             ghcr.io/troykelly/xteve-nvidia-cuda-ffmpeg
           # generate Docker tags based on the following events/attributes
           tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=pr
-            type=sha
-            type=edge,enable=true,priority=700,prefix=,suffix=,branch=$repo.default_branch
+            type=schedule,prefix=${{ matrix.version }}-${{ matrix.os }}-
+            type=ref,event=branch,prefix=${{ matrix.version }}-${{ matrix.os }}-
+            type=ref,event=pr,prefix=${{ matrix.version }}-${{ matrix.os }}-
+            type=sha,prefix=${{ matrix.version }}-${{ matrix.os }}-
+            type=edge,enable=true,priority=700prefix=${{ matrix.version }}-${{ matrix.os }}-,suffix=,branch=$repo.default_branch
+            type=edge,enable=${{ matrix.version == '11.8.0' && matrix.os == 'ubuntu22.04' && matrix.ffmpeg == '5.1.2' }},prefix=,suffix=
 
       - name: 🏗 Set up build cache
         id: cache
@@ -141,6 +150,8 @@ jobs:
             BUILD_REF=${{ github.sha }}
             BUILD_REPOSITORY=${{ github.repository }}
             BUILD_VERSION=${{ needs.information.outputs.version }}
+            CUDA=${{ matrix.version }}
+            OS=${{ matrix.os }}
       # This ugly bit is necessary, or our cache will grow forever...
       # Well until we hit GitHub's limit of 5GB :)
       # https://github.com/docker/build-push-action/issues/252
