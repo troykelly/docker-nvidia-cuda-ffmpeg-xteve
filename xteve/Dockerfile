@@ -1,4 +1,8 @@
-FROM ghcr.io/aperim/nvidia-cuda-ffmpeg:0.1.9
+ARG CUDA=11.8.0
+ARG OS=ubuntu22.04
+FROM ghcr.io/aperim/nvidia-cuda-ffmpeg:${CUDA}-${OS}-latest
+ARG CUDA
+ARG OS
 
 RUN apt-get update && \
     apt-get -y --allow-change-held-packages full-upgrade && \
@@ -31,8 +35,8 @@ ENV GID=1000
 
 LABEL \
     maintainer="Troy Kelly <troy@troykelly.com>" \
-    org.opencontainers.image.title="${BUILD_NAME}" \
-    org.opencontainers.image.description="${BUILD_DESCRIPTION}" \
+    org.opencontainers.image.title="${BUILD_NAME} ${CUDA} ${OS}" \
+    org.opencontainers.image.description="${BUILD_DESCRIPTION} for CUDA ${CUDA} OS ${OS}" \
     org.opencontainers.image.vendor="Troy Kelly" \
     org.opencontainers.image.authors="Troy Kelly <troy@troykelly.com>" \
     org.opencontainers.image.licenses="Apache-2.0" \
