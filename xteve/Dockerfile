@@ -1,4 +1,4 @@
-FROM ghcr.io/aperim/nvidia-cuda-ffmpeg:latest
+FROM ghcr.io/aperim/nvidia-cuda-ffmpeg:0.1.9
 
 RUN apt-get update && \
     apt-get -y --allow-change-held-packages full-upgrade && \
@@ -11,16 +11,9 @@ RUN mkdir -p /opt/xteve /etc/xteve/config && \
     mv ./xteve /usr/bin/ && \
     chmod 755 /usr/bin/xteve && \
     rm -rf /var/lib/apt/lists/* /opt/xteve && \
-    addgroup --gid 1000 xteve && \
-    adduser --home /etc/xteve \
-        --shell /usr/sbin/nologin \
-        --no-create-home \
-        --uid 1000 \
-        --gid 1000 \
-        --gecos xteve,xteve,,,xteve \
-        --disabled-password \
-        --disabled-login \
-        xteve
+    usermod -l xteve ffmpeg && \
+    groupmod --new-name xteve ffmpeg && \
+    usermod -d /etc/xteve xteve
 
 COPY ./xteve/rootfs /
 
