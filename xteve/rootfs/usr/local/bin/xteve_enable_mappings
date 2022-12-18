@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Script to re-enable all xteve mappings
+# Performs a regex on the config file
+#   s/(\s+\"x-active\": )false(,)/\1true\2/
+#
+# Passed as command line switches
+# -c or --conf: The config file (default /etc/xteve/config/xepg.json)
+#
+# Example:
+#   xteve_enable_mappings conf=/etc/xteve/config/xepg.json
+#
+# Author:  Troy Kelly
+# Date:    2022-12-18
+# Version: 0.1
+
+# Get command line
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    -c|--conf)
+    CONF="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    *)    # unknown option
+    POSITIONAL+=("$1") # save it in an array for later
+    shift # past argument
+    ;;
+esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+
+# Set defaults
+CONF=${CONF:-"/etc/xteve/config/xepg.json"}
+
+# Check for config file
+if [ ! -f "$CONF" ]; then
+    echo "Config file not found: $CONF"
+    exit 1
+fi
+
+# Perform regex
+sed -i --regexp-extended "s/(\s+\"x-active\": )false(,)/\1true\2/" "$CONF"

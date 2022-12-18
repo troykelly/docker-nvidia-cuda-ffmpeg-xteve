@@ -14,6 +14,7 @@ else
 fi
 
 chown -R ${UID}:${GID} /etc/xteve
+sudo -H -u xteve -- "/usr/local/bin/xteve_enable_mappings"
 
 if [[ -x "/usr/bin/xteve" ]]; then
   echo >&2 "🆗 Ready 3"
