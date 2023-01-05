@@ -49,3 +49,5 @@ LABEL \
 
 ENTRYPOINT ["docker-xteve-entrypoint"]
 CMD ["-config=/etc/xteve/config", "-port=8080"]
+
+HEALTHCHECK --interval=5s --timeout=2s --retries=20 CMD healthcheck || exit 1
