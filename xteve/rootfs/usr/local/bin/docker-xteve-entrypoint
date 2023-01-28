@@ -21,6 +21,7 @@ chown -R ${UID}:${GID} /etc/xteve
 
 cleanup_temp () {
   mkdir -p /tmp/xteve
+  chown -r xteve:xteve /tmp/xteve
   while :
   do
     find /tmp/xteve/ -type f -name "*.ts" -mmin "+${MAXTEMPAGE}" -delete
