@@ -21,7 +21,7 @@ chown -R ${UID}:${GID} /etc/xteve
 
 cleanup_temp () {
   mkdir -p /tmp/xteve
-  chown -r xteve:xteve /tmp/xteve
+  chown -R xteve:xteve /tmp/xteve
   while :
   do
     find /tmp/xteve/ -type f -name "*.ts" -mmin "+${MAXTEMPAGE}" -delete
@@ -47,6 +47,9 @@ if [[ -x "/usr/bin/xteve" ]]; then
   fi
   echo >&2 "🕴️ Waiting for process ${pid} to finish"
   wait ${pid}
+  if [[ ! -z "${cleanuppid}" ]]; then
+    kill -s SIGTERM ${cleanuppid}
+  fi
 else
   echo >&2 "🛑 No xteve executable"
 fi
