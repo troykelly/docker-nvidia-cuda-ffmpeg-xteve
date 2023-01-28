@@ -13,12 +13,28 @@ else
   groupmod -g ${GID} xteve
 fi
 
+if [[ -z "${MAXTEMPAGE}" ]]; then
+  MAXTEMPAGE=10
+fi
+
 chown -R ${UID}:${GID} /etc/xteve
+
+cleanup_temp () {
+  mkdir -p /tmp/xteve
+  while :
+  do
+    find /tmp/xteve/ -type f -name "*.ts" -mmin "+${MAXTEMPAGE}" -delete
+    sleep 60
+  done
+}
 
 if [[ -x "/usr/bin/xteve" ]]; then
   echo >&2 "🆗 Ready 3"
   # first arg is `-f` or `--some-option`
   if [ "${1#-}" != "$1" ]; then
+    cleanup_temp &
+    cleanuppid=$!
+    echo >&2 "🧹 Started xteve tmp cleanup ${cleanuppid}"
     echo >&2 "📺 Starting xteve with settings \"$@\""
     sudo -H -u xteve -- "/usr/local/bin/xteve_enable_mappings"
     sudo -H -u xteve -- "/usr/bin/xteve" "$@" &
