@@ -58,7 +58,7 @@ jobs:
   build:
     strategy:
       matrix:
-        version: [12.0.0, 11.8.0, 11.7.1, 11.7.0]
+        version: [12.0.1, 12.0.0, 11.8.0, 11.7.1, 11.7.0]
         os: [ubuntu22.04]
     name: 👷 Build CUDA ${{ matrix.version }} on ${{ matrix.os }}
     needs:
@@ -96,7 +96,7 @@ jobs:
             type=ref,event=pr,prefix=${{ matrix.version }}-${{ matrix.os }}-
             type=sha,prefix=${{ matrix.version }}-${{ matrix.os }}-
             type=edge,enable=true,priority=700prefix=${{ matrix.version }}-${{ matrix.os }}-,suffix=,branch=$repo.default_branch
-            type=edge,enable=${{ matrix.version == '12.0.0' && matrix.os == 'ubuntu22.04' }},prefix=,suffix=
+            type=edge,enable=${{ matrix.version == '12.0.1' && matrix.os == 'ubuntu22.04' }},prefix=,suffix=
 
       - name: 🏗 Set up build cache
         id: cache
