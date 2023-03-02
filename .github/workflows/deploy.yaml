@@ -60,7 +60,7 @@ jobs:
   deploy:
     strategy:
       matrix:
-        version: [12.0.0, 11.8.0, 11.7.1, 11.7.0]
+        version: [12.0.1, 12.0.0, 11.8.0, 11.7.1, 11.7.0]
         os: [ubuntu22.04]
     name: 👷 Build & Deploy CUDA ${{ matrix.version }} on ${{ matrix.os }}
     needs:
