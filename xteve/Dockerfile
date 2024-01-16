@@ -4,19 +4,19 @@ FROM ghcr.io/aperim/nvidia-cuda-ffmpeg:${CUDA}-${OS}-latest
 ARG CUDA
 ARG OS
 
-RUN apt-get update &&
-    apt-get -y --allow-change-held-packages full-upgrade &&
+RUN apt-get update && \
+    apt-get -y --allow-change-held-packages full-upgrade && \
     apt-get -y install vlc curl unzip sudo
 
-RUN mkdir -p /opt/xteve /etc/xteve/config &&
-    curl -L "https://github.com/xteve-project/xTeVe-Downloads/blob/master/xteve_linux_amd64.zip?raw=true" -o /opt/xteve/xteve.zip &&
-    cd /opt/xteve &&
-    unzip /opt/xteve/xteve.zip &&
-    mv ./xteve /usr/bin/ &&
-    chmod 755 /usr/bin/xteve &&
-    rm -rf /var/lib/apt/lists/* /opt/xteve &&
-    usermod -l xteve ffmpeg &&
-    groupmod --new-name xteve ffmpeg &&
+RUN mkdir -p /opt/xteve /etc/xteve/config && \
+    curl -L "https://github.com/xteve-project/xTeVe-Downloads/blob/master/xteve_linux_amd64.zip?raw=true" -o /opt/xteve/xteve.zip && \
+    cd /opt/xteve && \
+    unzip /opt/xteve/xteve.zip && \
+    mv ./xteve /usr/bin/ && \
+    chmod 755 /usr/bin/xteve && \
+    rm -rf /var/lib/apt/lists/* /opt/xteve && \
+    usermod -l xteve ffmpeg && \
+    groupmod --new-name xteve ffmpeg && \
     usermod -d /etc/xteve xteve
 
 COPY ./xteve/rootfs /
